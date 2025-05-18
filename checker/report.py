@@ -7,10 +7,12 @@ def format_report(data: dict) -> str:
     else:
         lines.append(f"- **Domain Age**: {whois['domain_age']}")
         lines.append(f"- **Registrar**: {whois['registrar']}")
+        lines.append(f"- **Contact Info**: {data['contact_info']}")
     content = data['content']
     if 'error' in content:
         lines.append(f"- **Content Fetch**: Error - {content['error']}")
     else:
         lines.append(f"- **Title**: {content['title']}")
     lines.append(f"- **Blacklist Status**: {data['blacklist']}")
+   
     return "\n".join(lines)

@@ -1,7 +1,8 @@
 import whois
 from urllib.parse import urlparse
 import requests
-
+import re
+from bs4 import BeautifulSoup
 def check_https(url):
     return url.lower().startswith("https")
 
@@ -17,8 +18,28 @@ def get_whois_info(url):
         return {"error": str(e)}
 
 def check_contact_info(url):
-    # Placeholder; could scan for 'contact' keywords in HTML
-    return "Not implemented"
+    try:
+        response = requests.get(url, timeout=10)
+        soup = BeautifulSoup(response.text, 'html.parser')
+        text = soup.get_text().lower()
+
+        indicators = ["contact", "email", "phone", "call us", "reach us"]
+        found_keywords = [word for word in indicators if word in text]
+
+        emails = re.findall(r"[\w\.-]+@[\w\.-]+", text)
+        phones = re.findall(r"\+?\d[\d\s\-().]{7,}\d", text)
+
+        result = []
+        if found_keywords:
+            result.append(f"Keywords found: {', '.join(found_keywords)}")
+        if emails:
+            result.append(f"Emails: {', '.join(set(emails))}")
+        if phones:
+            result.append(f"Phones: {', '.join(set(phones))}")
+
+        return " | ".join(result) if result else "No contact info found"
+    except Exception as e:
+        return f"Contact info scan failed: {str(e)}"
 
 def check_blacklists(url):
     domain = urlparse(url).netloc
