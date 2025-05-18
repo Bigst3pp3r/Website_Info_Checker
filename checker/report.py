@@ -1,4 +1,3 @@
-# checker/report.py
 def format_report(data: dict) -> str:
     lines = ["### Site Legitimacy Report"]
     lines.append(f"- **HTTPS**: {'Yes' if data['https'] else 'No'}")
