@@ -52,3 +52,26 @@ def check_blacklists(url):
         return "Not found in known blacklists"
     except Exception as e:
         return f"Blacklist check failed: {str(e)}"
+    
+def classify_content_tone(text):
+    scam_indicators = [
+        "urgent", "limited time", "click here", "act now", "congratulations",
+        "you won", "free", "risk-free", "guaranteed", "credit card", "bitcoin"
+    ]
+    legit_indicators = [
+        "about us", "contact", "privacy policy", "terms of service",
+        "customer service", "secure", "verified", "registered company"
+    ]
+
+    scam_count = sum(1 for word in scam_indicators if word in text.lower())
+    legit_count = sum(1 for word in legit_indicators if word in text.lower())
+
+    if scam_count > legit_count:
+        return "⚠️ Suspicious/Scam-like"
+    elif legit_count > scam_count:
+        return "✅ Likely Legitimate"
+    else:
+        return "❓ Unclear"
+    
+    
+    

@@ -14,5 +14,7 @@ def format_report(data: dict) -> str:
     else:
         lines.append(f"- **Title**: {content['title']}")
     lines.append(f"- **Blacklist Status**: {data['blacklist']}")
+    lines.append(f"- **Content Tone**: {data['tone']}")
+    
    
     return "\n".join(lines)
